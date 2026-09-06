@@ -7,10 +7,7 @@ import {
   GraduationCap,
   Info,
   Monitor,
-  Projector,
   School,
-  Users,
-  Wind,
   XCircle,
   Zap,
 } from 'lucide-react';
@@ -91,20 +88,15 @@ export const RoomCard: React.FC<RoomCardProps> = ({
               <span>{room.buildingName}</span>
               <span className="dot-divider">•</span>
               <span className="floor-label">
-                {room.floor === 0 ? 'Ground Floor' : `Floor ${room.floor}`}
+                {room.departmentName || (room.floor === 0 ? 'Ground Floor' : `Floor ${room.floor}`)}
               </span>
             </div>
           </div>
           <span className="room-code-tag">{room.code}</span>
         </div>
 
-        {/* Capacity & Amenities Pills */}
+        {/* Equipment & Sockets Pills */}
         <div className="amenities-row">
-          <div className="amenity-pill" title="Seating Capacity">
-            <Users size={14} />
-            <span>{room.amenities.seatingCapacity} Seats</span>
-          </div>
-
           {room.amenities.computerCount ? (
             <div className="amenity-pill highlight" title="Desktop Computers Available">
               <Monitor size={14} />
@@ -112,24 +104,10 @@ export const RoomCard: React.FC<RoomCardProps> = ({
             </div>
           ) : null}
 
-          {room.amenities.hasProjector && (
-            <div className="amenity-pill" title="HD Projector Available">
-              <Projector size={14} />
-              <span>Projector</span>
-            </div>
-          )}
-
-          {room.amenities.hasAC && (
-            <div className="amenity-pill" title="Air Conditioned">
-              <Wind size={14} />
-              <span>AC</span>
-            </div>
-          )}
-
           {room.amenities.powerOutlets && (
-            <div className="amenity-pill" title="Power Sockets at desk">
+            <div className="amenity-pill" title="Power Sockets Available">
               <Zap size={14} />
-              <span>Power Sockets</span>
+              <span>Power Outlets</span>
             </div>
           )}
         </div>

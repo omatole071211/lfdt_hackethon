@@ -1,8 +1,21 @@
+export const FLOOR_DEPARTMENTS = {
+  0: 'Ground Floor',
+  1: '1st Floor • Basic Sciences',
+  2: '2nd Floor • Electrical Dept',
+  3: '3rd Floor • Civil Dept',
+  4: '4th Floor • Electronics Dept',
+  5: '5th Floor • IT Department',
+  6: '6th Floor • Computer Department',
+  7: '7th Floor • Chemical Dept',
+  8: '8th Floor • Aerospace Dept',
+  9: '9th Floor • Mechanical Department',
+};
+
 export const BUILDINGS = [
-  { id: 'bld-eng', name: 'Engineering Block', code: 'ENG', totalFloors: 4 },
-  { id: 'bld-mab', name: 'Main Academic Building', code: 'MAB', totalFloors: 4 },
-  { id: 'bld-sci', name: 'Science Complex', code: 'SCI', totalFloors: 3 },
-  { id: 'bld-tech', name: 'Technology Hub', code: 'TECH', totalFloors: 4 },
+  { id: 'bld-eng', name: 'Engineering Block', code: 'ENG', totalFloors: 9 },
+  { id: 'bld-mab', name: 'Main Academic Building', code: 'MAB', totalFloors: 9 },
+  { id: 'bld-sci', name: 'Science Complex', code: 'SCI', totalFloors: 5 },
+  { id: 'bld-tech', name: 'Technology Hub', code: 'TECH', totalFloors: 9 },
 ];
 
 export const ROOMS = [

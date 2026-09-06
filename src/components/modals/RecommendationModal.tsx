@@ -7,7 +7,6 @@ import {
   Laptop,
   Lightbulb,
   Monitor,
-  Projector,
   Sparkles,
   User,
   Users,
@@ -151,20 +150,11 @@ export const RecommendationModal: React.FC<RecommendationModalProps> = ({
               <label className="checkbox-pill">
                 <input
                   type="checkbox"
-                  checked={!!query.needProjector}
-                  onChange={(e) => setQuery({ ...query, needProjector: e.target.checked })}
-                />
-                <Projector size={16} />
-                <span>HD Projector</span>
-              </label>
-              <label className="checkbox-pill">
-                <input
-                  type="checkbox"
                   checked={!!query.needComputers}
                   onChange={(e) => setQuery({ ...query, needComputers: e.target.checked })}
                 />
                 <Monitor size={16} />
-                <span>Desktop PCs</span>
+                <span>Desktop PCs Required</span>
               </label>
             </div>
           </div>
@@ -193,7 +183,7 @@ export const RecommendationModal: React.FC<RecommendationModalProps> = ({
                         <span className="score-tag">Match Score: {rec.score} pts</span>
                       </div>
                       <p className="rec-location">
-                        {rec.roomStatus.room.buildingName} • Floor {rec.roomStatus.room.floor}
+                        {rec.roomStatus.room.buildingName} • {rec.roomStatus.room.departmentName || `Floor ${rec.roomStatus.room.floor}`}
                       </p>
 
                       <div className="rec-duration text-green">

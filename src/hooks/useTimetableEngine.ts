@@ -13,9 +13,10 @@ export function useTimetableEngine() {
     selectedDay: liveTime.dayOfWeek,
     selectedTime: liveTime.time24h,
     selectedBuilding: 'all',
-    selectedFloor: 'all',
+    selectedFloors: [], // Empty array = all floors
     selectedType: 'all',
     searchQuery: '',
+    sortBy: 'classroom',
   });
 
   // Modal & Drawer Selection States
@@ -34,9 +35,9 @@ export function useTimetableEngine() {
     );
   }, [activeDay, activeTime]);
 
-  // Apply visual filters (Building, Floor, Room Type, Search Query)
+  // Apply visual filters (Building, Multi-Floor, Room Type, Search Query, Sorting)
   const filteredStatuses = useMemo(() => {
-    return allRoomStatuses.filter((status) => {
+    const list = allRoomStatuses.filter((status) => {
       const { room } = status;
 
       // 1. Building filter
@@ -44,8 +45,8 @@ export function useTimetableEngine() {
         return false;
       }
 
-      // 2. Floor filter
-      if (filters.selectedFloor !== 'all' && room.floor !== Number(filters.selectedFloor)) {
+      // 2. Multi-floor filter (if selectedFloors is not empty, room.floor must be included)
+      if (filters.selectedFloors.length > 0 && !filters.selectedFloors.includes(room.floor)) {
         return false;
       }
 
@@ -60,7 +61,8 @@ export function useTimetableEngine() {
         const roomMatch =
           room.name.toLowerCase().includes(query) ||
           room.code.toLowerCase().includes(query) ||
-          room.buildingName.toLowerCase().includes(query);
+          room.buildingName.toLowerCase().includes(query) ||
+          (room.departmentName && room.departmentName.toLowerCase().includes(query));
 
         let scheduleMatch = false;
         if (status.currentSchedule) {
@@ -79,28 +81,55 @@ export function useTimetableEngine() {
 
       return true;
     });
+
+    // Apply Sorting (by classroom or by class)
+    return list.sort((a, b) => {
+      if (filters.sortBy === 'class') {
+        // Occupied (with current class) first, then available rooms
+        if (a.isAvailable !== b.isAvailable) {
+          return a.isAvailable ? 1 : -1;
+        }
+        if (a.currentSchedule && b.currentSchedule) {
+          return a.currentSchedule.subjectCode.localeCompare(b.currentSchedule.subjectCode);
+        }
+      }
+      // Default / Classroom sorting: Sort by floor then room name
+      if (a.room.floor !== b.room.floor) {
+        return a.room.floor - b.room.floor;
+      }
+      return a.room.name.localeCompare(b.room.name);
+    });
   }, [allRoomStatuses, filters]);
 
-  // Overall Statistics Summary
+  // Overall Statistics Summary (Before & After Sorting/Filtering)
   const statistics = useMemo(() => {
     const total = allRoomStatuses.length;
     const available = allRoomStatuses.filter((s) => s.isAvailable).length;
     const occupied = total - available;
-    const freeComputerLabs = allRoomStatuses.filter(
-      (s) => s.isAvailable && s.room.type === 'computer_lab'
-    ).length;
-    const freeSeminarHalls = allRoomStatuses.filter(
-      (s) => s.isAvailable && s.room.type === 'seminar_hall'
-    ).length;
+
+    // Classrooms count (before & after filtering)
+    const totalClassrooms = allRoomStatuses.filter((s) => s.room.type === 'classroom').length;
+    const filteredClassrooms = filteredStatuses.filter((s) => s.room.type === 'classroom').length;
+
+    // Labs count (before & after filtering: computer labs & science labs)
+    const isLab = (t: RoomType) => t === 'computer_lab' || t === 'science_lab';
+    const totalLabs = allRoomStatuses.filter((s) => isLab(s.room.type)).length;
+    const filteredLabs = filteredStatuses.filter((s) => isLab(s.room.type)).length;
+
+    // Currently occupied classes list in the filtered selection
+    const occupiedClasses = filteredStatuses.filter((s) => !s.isAvailable && s.currentSchedule);
 
     return {
       total,
       available,
       occupied,
-      freeComputerLabs,
-      freeSeminarHalls,
+      totalClassrooms,
+      filteredClassrooms,
+      totalLabs,
+      filteredLabs,
+      occupiedClasses,
     };
-  }, [allRoomStatuses]);
+  }, [allRoomStatuses, filteredStatuses]);
 
   // Filter Updater Handlers
   const toggleLiveMode = (isLive: boolean) => {
@@ -124,8 +153,17 @@ export function useTimetableEngine() {
     setFilters((prev) => ({ ...prev, selectedBuilding: buildingId }));
   };
 
-  const setSelectedFloor = (floor: number | 'all') => {
-    setFilters((prev) => ({ ...prev, selectedFloor: floor }));
+  const toggleFloorSelection = (floor: number | 'all') => {
+    setFilters((prev) => {
+      if (floor === 'all') {
+        return { ...prev, selectedFloors: [] };
+      }
+      const exists = prev.selectedFloors.includes(floor);
+      const newFloors = exists
+        ? prev.selectedFloors.filter((f) => f !== floor)
+        : [...prev.selectedFloors, floor];
+      return { ...prev, selectedFloors: newFloors };
+    });
   };
 
   const setSelectedType = (type: RoomType | 'all') => {
@@ -134,6 +172,10 @@ export function useTimetableEngine() {
 
   const setSearchQuery = (query: string) => {
     setFilters((prev) => ({ ...prev, searchQuery: query }));
+  };
+
+  const setSortBy = (sortBy: 'classroom' | 'class') => {
+    setFilters((prev) => ({ ...prev, sortBy }));
   };
 
   return {
@@ -149,9 +191,10 @@ export function useTimetableEngine() {
     setSelectedDay,
     setSelectedTime,
     setSelectedBuilding,
-    setSelectedFloor,
+    toggleFloorSelection,
     setSelectedType,
     setSearchQuery,
+    setSortBy,
     // Modals & Drawers
     detailRoom,
     setDetailRoom,

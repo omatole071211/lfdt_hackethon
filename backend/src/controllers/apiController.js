@@ -6,16 +6,24 @@ export function getBuildings(req, res) {
 }
 
 export function getRooms(req, res) {
-  const { buildingId, floor, type } = req.query;
+  const { buildingId, floor, floors, type } = req.query;
 
   let result = [...ROOMS];
 
   if (buildingId && buildingId !== 'all') {
     result = result.filter((r) => r.buildingId === buildingId);
   }
-  if (floor && floor !== 'all') {
+
+  // Handle multi-floor array parameter or single floor
+  if (floors) {
+    const floorNums = floors.split(',').map((f) => Number(f.trim())).filter((n) => !isNaN(n));
+    if (floorNums.length > 0) {
+      result = result.filter((r) => floorNums.includes(r.floor));
+    }
+  } else if (floor && floor !== 'all') {
     result = result.filter((r) => r.floor === Number(floor));
   }
+
   if (type && type !== 'all') {
     result = result.filter((r) => r.type === type);
   }
@@ -39,16 +47,24 @@ export function getSchedules(req, res) {
 }
 
 export function getAvailability(req, res) {
-  const { day = 'Monday', time = '10:00', buildingId, floor, type, q } = req.query;
+  const { day = 'Monday', time = '10:00', buildingId, floor, floors, type, q, sortBy } = req.query;
 
   let roomsToEvaluate = [...ROOMS];
 
   if (buildingId && buildingId !== 'all') {
     roomsToEvaluate = roomsToEvaluate.filter((r) => r.buildingId === buildingId);
   }
-  if (floor && floor !== 'all') {
+
+  // Handle multi-floor or single floor filtering
+  if (floors) {
+    const floorNums = floors.split(',').map((f) => Number(f.trim())).filter((n) => !isNaN(n));
+    if (floorNums.length > 0) {
+      roomsToEvaluate = roomsToEvaluate.filter((r) => floorNums.includes(r.floor));
+    }
+  } else if (floor && floor !== 'all') {
     roomsToEvaluate = roomsToEvaluate.filter((r) => r.floor === Number(floor));
   }
+
   if (type && type !== 'all') {
     roomsToEvaluate = roomsToEvaluate.filter((r) => r.type === type);
   }
@@ -63,7 +79,8 @@ export function getAvailability(req, res) {
       const roomMatch =
         status.room.name.toLowerCase().includes(query) ||
         status.room.code.toLowerCase().includes(query) ||
-        status.room.buildingName.toLowerCase().includes(query);
+        status.room.buildingName.toLowerCase().includes(query) ||
+        (status.room.departmentName && status.room.departmentName.toLowerCase().includes(query));
 
       let scheduleMatch = false;
       if (status.currentSchedule) {
@@ -79,6 +96,16 @@ export function getAvailability(req, res) {
     });
   }
 
+  // Optional sorting by classroom or class
+  if (sortBy === 'class') {
+    statuses.sort((a, b) => {
+      if (a.isAvailable !== b.isAvailable) return a.isAvailable ? 1 : -1;
+      return a.room.name.localeCompare(b.room.name);
+    });
+  } else {
+    statuses.sort((a, b) => a.room.name.localeCompare(b.room.name));
+  }
+
   res.json({
     activeDay: day,
     activeTime: time,
@@ -89,7 +116,7 @@ export function getAvailability(req, res) {
 
 export function getRecommendations(req, res) {
   const {
-    purpose = 'study',
+    purpose = 'classroom',
     groupSize = 'small',
     buildingId = 'all',
     needComputers = false,
@@ -122,18 +149,15 @@ export function getAnalytics(req, res) {
   const total = statuses.length;
   const available = statuses.filter((s) => s.isAvailable).length;
   const occupied = total - available;
-  const freeComputerLabs = statuses.filter(
-    (s) => s.isAvailable && s.room.type === 'computer_lab'
-  ).length;
-  const freeSeminarHalls = statuses.filter(
-    (s) => s.isAvailable && s.room.type === 'seminar_hall'
-  ).length;
+
+  const totalClassrooms = ROOMS.filter((r) => r.type === 'classroom').length;
+  const totalLabs = ROOMS.filter((r) => r.type === 'computer_lab' || r.type === 'science_lab').length;
 
   res.json({
     total,
     available,
     occupied,
-    freeComputerLabs,
-    freeSeminarHalls,
+    totalClassrooms,
+    totalLabs,
   });
 }

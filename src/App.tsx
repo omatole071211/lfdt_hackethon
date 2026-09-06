@@ -40,9 +40,10 @@ export function App() {
     setSelectedDay,
     setSelectedTime,
     setSelectedBuilding,
-    setSelectedFloor,
+    toggleFloorSelection,
     setSelectedType,
     setSearchQuery,
+    setSortBy,
     // Drawer & Modals
     detailRoom,
     setDetailRoom,
@@ -86,9 +87,10 @@ export function App() {
           onSelectDay={setSelectedDay}
           onSelectTime={setSelectedTime}
           onSelectBuilding={setSelectedBuilding}
-          onSelectFloor={setSelectedFloor}
+          onToggleFloor={toggleFloorSelection}
           onSelectType={setSelectedType}
           onSearchChange={setSearchQuery}
+          onSelectSortBy={setSortBy}
         />
 
         {/* Available vs Occupied Room Grid */}

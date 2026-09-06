@@ -104,22 +104,23 @@ export function recommendRooms(
         matchReasons.push('Classroom suitable for study & sessions');
       }
     } else if (query.purpose === 'seminar_hall') {
-      if (res.room.type === 'seminar_hall' || res.room.amenities.seatingCapacity >= 80) {
+      if (res.room.type === 'seminar_hall' || (res.room.amenities.seatingCapacity ?? 40) >= 80) {
         score += 70;
-        matchReasons.push('Seminar Hall / high capacity venue');
+        matchReasons.push('Seminar Hall venue');
       }
     }
 
     // Seating capacity preference based on group size (2-5 vs >10)
+    const cap = res.room.amenities.seatingCapacity ?? 40;
     if (query.groupSize === 'small') {
-      if (res.room.amenities.seatingCapacity >= 2 && res.room.amenities.seatingCapacity <= 60) {
+      if (cap >= 2 && cap <= 60) {
         score += 30;
-        matchReasons.push('Optimal capacity for 2–5 people');
+        matchReasons.push('Optimal space for small groups (2–5 people)');
       }
     } else if (query.groupSize === 'large') {
-      if (res.room.amenities.seatingCapacity >= 60) {
+      if (cap >= 60) {
         score += 40;
-        matchReasons.push(`Large capacity (${res.room.amenities.seatingCapacity}+ seats) for 10+ group`);
+        matchReasons.push('Spacious room suitable for large groups (10+ people)');
       }
     }
 
@@ -130,7 +131,7 @@ export function recommendRooms(
     }
     if (query.needProjector && res.room.amenities.hasProjector) {
       score += 30;
-      matchReasons.push('HD Projector / Smart Display available');
+      matchReasons.push('Display available');
     }
 
     // Building proximity filter

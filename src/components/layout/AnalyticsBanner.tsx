@@ -1,13 +1,15 @@
 import React from 'react';
-import { CheckCircle2, Monitor, School, XCircle } from 'lucide-react';
+import { CheckCircle2, GraduationCap, Monitor, XCircle } from 'lucide-react';
 
 interface AnalyticsBannerProps {
   statistics: {
     total: number;
     available: number;
     occupied: number;
-    freeComputerLabs: number;
-    freeSeminarHalls: number;
+    totalClassrooms: number;
+    filteredClassrooms: number;
+    totalLabs: number;
+    filteredLabs: number;
   };
 }
 
@@ -15,53 +17,58 @@ export const AnalyticsBanner: React.FC<AnalyticsBannerProps> = ({ statistics }) 
   return (
     <section className="analytics-banner">
       <div className="analytics-grid">
-        {/* Total Rooms */}
+        {/* Classroom Count (Accurate Before & After Sort/Filter) */}
         <div className="stat-card stat-total">
           <div className="stat-icon-wrapper">
-            <School size={22} />
+            <GraduationCap size={22} />
           </div>
           <div className="stat-info">
-            <span className="stat-value">{statistics.total}</span>
-            <span className="stat-label">Total Campus Spaces</span>
+            <span className="stat-value">
+              {statistics.filteredClassrooms} <span className="stat-subtext">/ {statistics.totalClassrooms}</span>
+            </span>
+            <span className="stat-label">Classrooms (Filtered / Total)</span>
           </div>
         </div>
 
-        {/* Available Rooms */}
+        {/* Labs Count (Accurate Before & After Sort/Filter) */}
+        <div className="stat-card stat-labs">
+          <div className="stat-icon-wrapper">
+            <Monitor size={22} />
+          </div>
+          <div className="stat-info">
+            <span className="stat-value">
+              {statistics.filteredLabs} <span className="stat-subtext">/ {statistics.totalLabs}</span>
+            </span>
+            <span className="stat-label">Labs Count (Filtered / Total)</span>
+          </div>
+          <span className="stat-badge badge-indigo">LABS</span>
+        </div>
+
+        {/* Available Spaces */}
         <div className="stat-card stat-available">
           <div className="stat-icon-wrapper">
             <CheckCircle2 size={22} />
           </div>
           <div className="stat-info">
             <span className="stat-value">{statistics.available}</span>
-            <span className="stat-label">Available Now</span>
+            <span className="stat-label">Available Spaces</span>
           </div>
           <span className="stat-badge badge-green">FREE</span>
         </div>
 
-        {/* Occupied Rooms */}
+        {/* Occupied Classes */}
         <div className="stat-card stat-occupied">
           <div className="stat-icon-wrapper">
             <XCircle size={22} />
           </div>
           <div className="stat-info">
             <span className="stat-value">{statistics.occupied}</span>
-            <span className="stat-label">Classes Ongoing</span>
+            <span className="stat-label">Occupied Classes</span>
           </div>
           <span className="stat-badge badge-red">OCCUPIED</span>
-        </div>
-
-        {/* Free Computer Labs */}
-        <div className="stat-card stat-labs">
-          <div className="stat-icon-wrapper">
-            <Monitor size={22} />
-          </div>
-          <div className="stat-info">
-            <span className="stat-value">{statistics.freeComputerLabs}</span>
-            <span className="stat-label">Free Computer Labs</span>
-          </div>
-          <span className="stat-badge badge-indigo">LABS</span>
         </div>
       </div>
     </section>
   );
 };
+

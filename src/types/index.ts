@@ -3,12 +3,12 @@ export type RoomType = 'classroom' | 'computer_lab' | 'science_lab' | 'seminar_h
 export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
 
 export interface Amenities {
-  seatingCapacity: number;
-  hasProjector: boolean;
-  hasAC: boolean;
   hasWhiteboard: boolean;
   computerCount?: number;
   powerOutlets: boolean;
+  seatingCapacity?: number;
+  hasProjector?: boolean;
+  hasAC?: boolean;
 }
 
 export interface Building {
@@ -25,6 +25,7 @@ export interface Room {
   buildingId: string;
   buildingName: string;
   floor: number;
+  departmentName?: string;
   type: RoomType;
   amenities: Amenities;
 }
@@ -56,9 +57,10 @@ export interface FilterState {
   selectedDay: DayOfWeek;
   selectedTime: string; // 24hr "10:30"
   selectedBuilding: string; // 'all' or buildingId
-  selectedFloor: number | 'all';
+  selectedFloors: number[]; // empty array means 'all', or list of selected floor numbers
   selectedType: RoomType | 'all';
   searchQuery: string;
+  sortBy: 'classroom' | 'class';
 }
 
 export type RecommendPurpose = 'classroom' | 'lab' | 'seminar_hall' | 'science_lab';

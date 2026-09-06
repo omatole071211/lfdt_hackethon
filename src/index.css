@@ -1487,6 +1487,146 @@ body {
   margin-top: auto;
 }
 
+/* Multi-Floor & Department Selection Styles */
+.row-floors {
+  margin-top: 12px;
+}
+
+.width-full {
+  width: 100%;
+}
+
+.multi-floor-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.multi-floor-tabs .floor-btn {
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* Sort Selector */
+.sort-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+}
+
+.sort-select {
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+/* Grid Summary Counter */
+.grid-summary-counter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.counter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  font-size: 0.82rem;
+  color: var(--text-main);
+}
+
+.counter-chip.highlight {
+  background-color: rgba(244, 63, 94, 0.08);
+  border-color: rgba(244, 63, 94, 0.25);
+  color: var(--accent-red);
+}
+
+.stat-subtext {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Occupied Classes Summary Banner */
+.occupied-classes-summary {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--accent-red);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+
+.summary-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text-main);
+}
+
+.occupied-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.occupied-class-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background-color: rgba(244, 63, 94, 0.06);
+  border: 1px solid rgba(244, 63, 94, 0.15);
+  font-size: 0.78rem;
+}
+
+.chip-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--accent-red);
+}
+
+.chip-subject {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.chip-room {
+  color: var(--text-muted);
+}
+
+.chip-time {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.04);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
 /* Pulse animation */
 .icon-pulse {
   animation: pulse 2s infinite;

@@ -5,9 +5,6 @@ import {
   Clock,
   GraduationCap,
   Monitor,
-  Projector,
-  Users,
-  Wind,
   X,
   XCircle,
   Zap,
@@ -48,7 +45,7 @@ export const RoomDetailDrawer: React.FC<RoomDetailDrawerProps> = ({
             <span className="drawer-tag">{room.buildingName}</span>
             <h2 className="drawer-title">{room.name} ({room.code})</h2>
             <p className="drawer-sub">
-              {room.floor === 0 ? 'Ground Floor' : `Floor ${room.floor}`} • {room.type.replace('_', ' ').toUpperCase()}
+              {room.departmentName || (room.floor === 0 ? 'Ground Floor' : `Floor ${room.floor}`)} • {room.type.replace('_', ' ').toUpperCase()}
             </p>
           </div>
           <button className="btn-close" onClick={onClose}>
@@ -85,13 +82,13 @@ export const RoomDetailDrawer: React.FC<RoomDetailDrawerProps> = ({
 
         {/* Specifications Grid */}
         <div className="drawer-section">
-          <h3 className="section-title">Facility & Equipment Details</h3>
+          <h3 className="section-title">Department & Space Specifications</h3>
           <div className="specs-grid">
             <div className="spec-card">
-              <Users size={20} className="spec-icon" />
+              <GraduationCap size={20} className="spec-icon" />
               <div>
-                <span className="spec-label">Seating Capacity</span>
-                <span className="spec-value">{room.amenities.seatingCapacity} Seats</span>
+                <span className="spec-label">Department</span>
+                <span className="spec-value">{room.departmentName || 'Academic Department'}</span>
               </div>
             </div>
 
@@ -106,29 +103,11 @@ export const RoomDetailDrawer: React.FC<RoomDetailDrawerProps> = ({
             </div>
 
             <div className="spec-card">
-              <Projector size={20} className="spec-icon" />
-              <div>
-                <span className="spec-label">Display & Projection</span>
-                <span className="spec-value">
-                  {room.amenities.hasProjector ? 'HD Projector / Smart Board' : 'Standard Board'}
-                </span>
-              </div>
-            </div>
-
-            <div className="spec-card">
-              <Wind size={20} className="spec-icon" />
-              <div>
-                <span className="spec-label">Climate Control</span>
-                <span className="spec-value">{room.amenities.hasAC ? 'Air Conditioned' : 'Natural Ventilation'}</span>
-              </div>
-            </div>
-
-            <div className="spec-card">
               <Zap size={20} className="spec-icon" />
               <div>
                 <span className="spec-label">Power Outlets</span>
                 <span className="spec-value">
-                  {room.amenities.powerOutlets ? 'Available per Desk' : 'Wall Sockets Only'}
+                  {room.amenities.powerOutlets ? 'Available per Desk' : 'Wall Outlets'}
                 </span>
               </div>
             </div>
