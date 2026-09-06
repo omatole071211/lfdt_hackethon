@@ -51,7 +51,7 @@ export function formatDuration(mins: number): string {
  * Gets current day of week as academic DayOfWeek (Sunday maps to Monday for demonstration)
  */
 export function getCurrentDayOfWeek(date: Date = new Date()): DayOfWeek {
-  const days: DayOfWeek[] = ['Monday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const days: DayOfWeek[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   return days[date.getDay()];
 }
 

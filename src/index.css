@@ -368,6 +368,12 @@ body {
   border: 1px solid var(--accent-red-border);
 }
 
+.badge-amber {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
 .badge-indigo {
   background: var(--accent-indigo-bg);
   color: var(--accent-indigo);
@@ -810,6 +816,16 @@ body {
 .box-busy {
   background: var(--accent-red-bg);
   border: 1px solid var(--accent-red-border);
+}
+
+.box-holiday {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.icon-amber,
+.text-amber {
+  color: #f59e0b !important;
 }
 
 .status-box-header {

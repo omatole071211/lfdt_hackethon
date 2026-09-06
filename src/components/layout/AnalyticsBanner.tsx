@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, GraduationCap, Monitor, XCircle } from 'lucide-react';
+import { Calendar, CheckCircle2, GraduationCap, Monitor, XCircle } from 'lucide-react';
 
 interface AnalyticsBannerProps {
   statistics: {
@@ -10,6 +10,7 @@ interface AnalyticsBannerProps {
     filteredClassrooms: number;
     totalLabs: number;
     filteredLabs: number;
+    isHolidayDay?: boolean;
   };
 }
 
@@ -17,7 +18,7 @@ export const AnalyticsBanner: React.FC<AnalyticsBannerProps> = ({ statistics }) 
   return (
     <section className="analytics-banner">
       <div className="analytics-grid">
-        {/* Classroom Count (Accurate Before & After Sort/Filter) */}
+        {/* Classroom Count */}
         <div className="stat-card stat-total">
           <div className="stat-icon-wrapper">
             <GraduationCap size={22} />
@@ -30,7 +31,7 @@ export const AnalyticsBanner: React.FC<AnalyticsBannerProps> = ({ statistics }) 
           </div>
         </div>
 
-        {/* Labs Count (Accurate Before & After Sort/Filter) */}
+        {/* Labs Count */}
         <div className="stat-card stat-labs">
           <div className="stat-icon-wrapper">
             <Monitor size={22} />
@@ -44,28 +45,32 @@ export const AnalyticsBanner: React.FC<AnalyticsBannerProps> = ({ statistics }) 
           <span className="stat-badge badge-indigo">LABS</span>
         </div>
 
-        {/* Available Spaces */}
+        {/* Available Spaces / Holiday */}
         <div className="stat-card stat-available">
           <div className="stat-icon-wrapper">
-            <CheckCircle2 size={22} />
+            {statistics.isHolidayDay ? <Calendar size={22} className="text-amber" /> : <CheckCircle2 size={22} />}
           </div>
           <div className="stat-info">
-            <span className="stat-value">{statistics.available}</span>
-            <span className="stat-label">Available Spaces</span>
+            <span className="stat-value">{statistics.isHolidayDay ? 'Holiday' : statistics.available}</span>
+            <span className="stat-label">{statistics.isHolidayDay ? 'Campus Status' : 'Available Spaces'}</span>
           </div>
-          <span className="stat-badge badge-green">FREE</span>
+          <span className={`stat-badge ${statistics.isHolidayDay ? 'badge-amber' : 'badge-green'}`}>
+            {statistics.isHolidayDay ? 'CLOSED' : 'FREE'}
+          </span>
         </div>
 
-        {/* Occupied Classes */}
+        {/* Occupied Classes / Holiday Note */}
         <div className="stat-card stat-occupied">
           <div className="stat-icon-wrapper">
-            <XCircle size={22} />
+            {statistics.isHolidayDay ? <Calendar size={22} className="text-amber" /> : <XCircle size={22} />}
           </div>
           <div className="stat-info">
-            <span className="stat-value">{statistics.occupied}</span>
-            <span className="stat-label">Occupied Classes</span>
+            <span className="stat-value">{statistics.isHolidayDay ? 'No Classes' : statistics.occupied}</span>
+            <span className="stat-label">{statistics.isHolidayDay ? 'Weekend Holiday' : 'Occupied Classes'}</span>
           </div>
-          <span className="stat-badge badge-red">OCCUPIED</span>
+          <span className={`stat-badge ${statistics.isHolidayDay ? 'badge-amber' : 'badge-red'}`}>
+            {statistics.isHolidayDay ? 'HOLIDAY' : 'OCCUPIED'}
+          </span>
         </div>
       </div>
     </section>

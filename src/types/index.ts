@@ -1,6 +1,6 @@
 export type RoomType = 'classroom' | 'computer_lab' | 'science_lab' | 'seminar_hall';
 
-export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
+export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
 
 export interface Amenities {
   hasWhiteboard: boolean;
@@ -45,6 +45,7 @@ export interface ScheduleSlot {
 export interface RoomStatusResult {
   room: Room;
   isAvailable: boolean;
+  isHoliday?: boolean;
   currentSchedule?: ScheduleSlot;
   nextSchedule?: ScheduleSlot;
   freeUntil?: string;

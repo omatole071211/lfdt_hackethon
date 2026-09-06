@@ -20,6 +20,17 @@ export function evaluateRoomStatus(
   day: DayOfWeek,
   targetTime: string
 ): RoomStatusResult {
+  // Saturday & Sunday are Weekend Holidays (Closed)
+  if (day === 'Saturday' || day === 'Sunday') {
+    return {
+      room,
+      isAvailable: false,
+      isHoliday: true,
+      freeUntil: undefined,
+      availableDurationMins: 0,
+    };
+  }
+
   const targetMins = timeToMinutes(targetTime);
 
   // Filter & sort all slots for this room on the selected day
@@ -52,7 +63,15 @@ export function evaluateRoomStatus(
   // 2. Room is AVAILABLE — Find next upcoming schedule slot today
   const upcomingSlot = roomSlots.find((s) => timeToMinutes(s.startTime) > targetMins);
 
-  const freeUntil = upcomingSlot ? upcomingSlot.startTime : ACADEMIC_DAY_END;
+  // 6th Building (Computer): 5:10 PM (17:10)
+  // 9th Building (Mechanical): 6:10 PM (18:10)
+  // 5th Building (IT & Comp): 6:10 PM (18:10)
+  const buildingClosingTime =
+    room.buildingId === 'bld-6' || room.code.startsWith('6')
+      ? '17:10'
+      : '18:10';
+
+  const freeUntil = upcomingSlot ? upcomingSlot.startTime : buildingClosingTime;
   const freeUntilMins = timeToMinutes(freeUntil);
   const availableDurationMins = Math.max(0, freeUntilMins - targetMins);
 

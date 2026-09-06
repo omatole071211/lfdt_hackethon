@@ -93,19 +93,42 @@ export function useTimetableEngine() {
           return a.currentSchedule.subjectCode.localeCompare(b.currentSchedule.subjectCode);
         }
       }
-      // Default / Classroom sorting: Sort by floor then room name
-      if (a.room.floor !== b.room.floor) {
-        return a.room.floor - b.room.floor;
-      }
-      return a.room.name.localeCompare(b.room.name);
+      // Default / Classroom sorting:
+      // 1. Sort by Building initial starting number (5 for IT/Comp, 6 for Comp, 9 for Mech)
+      // 2. Sort by Floor number (0 to 5)
+      // 3. Sort standard rooms first, special additions (New_CC, etc.) at the end
+      // 4. Sort by numeric room number
+      const getSortKey = (r: typeof a.room) => {
+        let bldNum = 6;
+        if (r.buildingId === 'bld-5' || r.code.startsWith('5')) bldNum = 5;
+        else if (r.buildingId === 'bld-6' || r.code.startsWith('6')) bldNum = 6;
+        else if (r.buildingId === 'bld-9' || r.code.startsWith('9')) bldNum = 9;
+
+        const isSpecial = r.code.startsWith('New_') || r.code.startsWith('0') || /^[A-Za-z]/.test(r.code) ? 1 : 0;
+        const digitMatch = r.code.match(/\d+/);
+        const roomNum = digitMatch ? parseInt(digitMatch[0], 10) : 9999;
+
+        return { bldNum, floor: r.floor, isSpecial, roomNum, code: r.code };
+      };
+
+      const keyA = getSortKey(a.room);
+      const keyB = getSortKey(b.room);
+
+      if (keyA.bldNum !== keyB.bldNum) return keyA.bldNum - keyB.bldNum;
+      if (keyA.floor !== keyB.floor) return keyA.floor - keyB.floor;
+      if (keyA.isSpecial !== keyB.isSpecial) return keyA.isSpecial - keyB.isSpecial;
+      if (keyA.roomNum !== keyB.roomNum) return keyA.roomNum - keyB.roomNum;
+
+      return keyA.code.localeCompare(keyB.code, undefined, { numeric: true, sensitivity: 'base' });
     });
   }, [allRoomStatuses, filters]);
 
   // Overall Statistics Summary (Before & After Sorting/Filtering)
   const statistics = useMemo(() => {
-    const total = allRoomStatuses.length;
-    const available = allRoomStatuses.filter((s) => s.isAvailable).length;
-    const occupied = total - available;
+    const isHolidayDay = activeDay === 'Saturday' || activeDay === 'Sunday';
+    const total = filteredStatuses.length;
+    const available = isHolidayDay ? 0 : filteredStatuses.filter((s) => s.isAvailable).length;
+    const occupied = isHolidayDay ? 0 : total - available;
 
     // Classrooms count (before & after filtering)
     const totalClassrooms = allRoomStatuses.filter((s) => s.room.type === 'classroom').length;
@@ -128,8 +151,9 @@ export function useTimetableEngine() {
       totalLabs,
       filteredLabs,
       occupiedClasses,
+      isHolidayDay,
     };
-  }, [allRoomStatuses, filteredStatuses]);
+  }, [allRoomStatuses, filteredStatuses, activeDay]);
 
   // Filter Updater Handlers
   const toggleLiveMode = (isLive: boolean) => {

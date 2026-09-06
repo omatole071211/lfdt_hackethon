@@ -28,18 +28,15 @@ interface ControlPanelProps {
   onSelectSortBy: (sortBy: 'classroom' | 'class') => void;
 }
 
-const DAYS: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const DAYS: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-const SEQUENTIAL_FLOORS = [
-  { floor: 1, label: '1F Basic Sci' },
-  { floor: 2, label: '2F Electrical' },
-  { floor: 3, label: '3F Civil' },
-  { floor: 4, label: '4F Electronics' },
-  { floor: 5, label: '5F IT Dept' },
-  { floor: 6, label: '6F Comp Dept' },
-  { floor: 7, label: '7F Chemical' },
-  { floor: 8, label: '8F Aerospace' },
-  { floor: 9, label: '9F Mech Dept' },
+const NORMAL_FLOORS = [
+  { floor: 0, label: 'Ground Floor' },
+  { floor: 1, label: 'Floor 1' },
+  { floor: 2, label: 'Floor 2' },
+  { floor: 3, label: 'Floor 3' },
+  { floor: 4, label: 'Floor 4' },
+  { floor: 5, label: 'Floor 5' },
 ];
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -66,7 +63,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           <input
             type="text"
             className="search-input"
-            placeholder="Search by faculty, subject (CS201), department, or room..."
+            placeholder="Check whether classroom is occupied or not (search room, subject, faculty)..."
             value={filters.searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
           />
@@ -125,7 +122,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           >
             {DAYS.map((day) => (
               <option key={day} value={day}>
-                {day}
+                {day === 'Saturday' || day === 'Sunday' ? `${day} (Holiday)` : day}
               </option>
             ))}
           </select>
@@ -164,11 +161,11 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         </div>
       </div>
 
-      {/* Multi-Floor Selection Row (Sequential Departments) */}
+      {/* Normal Floor Selection Row */}
       <div className="control-row row-floors">
         <div className="filter-group group-floor width-full">
           <label className="filter-label">
-            <Layers size={14} /> Department / Floor Selection (Select One or Multiple):
+            <Layers size={14} /> Floor Selection:
           </label>
           <div className="floor-tabs multi-floor-tabs">
             <button
@@ -177,14 +174,14 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             >
               All Floors
             </button>
-            {SEQUENTIAL_FLOORS.map(({ floor, label }) => {
+            {NORMAL_FLOORS.map(({ floor, label }) => {
               const isSelected = filters.selectedFloors.includes(floor);
               return (
                 <button
                   key={floor}
                   className={`floor-btn ${isSelected ? 'active' : ''}`}
                   onClick={() => onToggleFloor(floor)}
-                  title={`Toggle Floor ${floor}`}
+                  title={`Toggle ${label}`}
                 >
                   {label}
                 </button>

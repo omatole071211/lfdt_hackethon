@@ -46,7 +46,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({
       case 'science_lab':
         return (
           <span className="type-badge type-science-lab">
-            <FlaskConical size={13} /> Science Lab
+            <FlaskConical size={13} /> Laboratory
           </span>
         );
       case 'seminar_hall':
@@ -63,7 +63,12 @@ export const RoomCard: React.FC<RoomCardProps> = ({
       {/* Top Banner Status */}
       <div className="card-header">
         <div className="status-indicator">
-          {isAvailable ? (
+          {status.isHoliday ? (
+            <>
+              <Calendar size={18} className="icon-amber" />
+              <span className="status-text text-amber">HOLIDAY (CLOSED)</span>
+            </>
+          ) : isAvailable ? (
             <>
               <CheckCircle2 size={18} className="icon-green" />
               <span className="status-text text-green">AVAILABLE NOW</span>
@@ -113,7 +118,20 @@ export const RoomCard: React.FC<RoomCardProps> = ({
         </div>
 
         {/* Dynamic Class Status Information Box */}
-        {isAvailable ? (
+        {status.isHoliday ? (
+          <div className="status-box box-holiday">
+            <div className="status-box-header">
+              <Calendar size={16} className="text-amber" />
+              <span className="box-title">Weekend Campus Holiday</span>
+            </div>
+            <p className="box-highlight text-amber">
+              No Academic Classes Scheduled
+            </p>
+            <p className="box-sub">
+              Campus is on weekend holiday (Saturday & Sunday)
+            </p>
+          </div>
+        ) : isAvailable ? (
           <div className="status-box box-free">
             <div className="status-box-header">
               <Clock size={16} className="text-green" />
