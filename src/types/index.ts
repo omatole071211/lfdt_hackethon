@@ -1,0 +1,79 @@
+export type RoomType = 'classroom' | 'computer_lab' | 'science_lab' | 'seminar_hall';
+
+export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
+
+export interface Amenities {
+  seatingCapacity: number;
+  hasProjector: boolean;
+  hasAC: boolean;
+  hasWhiteboard: boolean;
+  computerCount?: number;
+  powerOutlets: boolean;
+}
+
+export interface Building {
+  id: string;
+  name: string;
+  code: string;
+  totalFloors: number;
+}
+
+export interface Room {
+  id: string;
+  name: string;
+  code: string;
+  buildingId: string;
+  buildingName: string;
+  floor: number;
+  type: RoomType;
+  amenities: Amenities;
+}
+
+export interface ScheduleSlot {
+  id: string;
+  roomId: string;
+  dayOfWeek: DayOfWeek;
+  startTime: string; // 24hr format "09:00"
+  endTime: string;   // 24hr format "10:00"
+  subjectCode: string;
+  subjectName: string;
+  facultyName: string;
+  batch: string;
+}
+
+export interface RoomStatusResult {
+  room: Room;
+  isAvailable: boolean;
+  currentSchedule?: ScheduleSlot;
+  nextSchedule?: ScheduleSlot;
+  freeUntil?: string;
+  nextAvailableTime?: string;
+  availableDurationMins?: number;
+}
+
+export interface FilterState {
+  isLiveMode: boolean;
+  selectedDay: DayOfWeek;
+  selectedTime: string; // 24hr "10:30"
+  selectedBuilding: string; // 'all' or buildingId
+  selectedFloor: number | 'all';
+  selectedType: RoomType | 'all';
+  searchQuery: string;
+}
+
+export type RecommendPurpose = 'study' | 'group' | 'lab' | 'lecture';
+export type GroupSize = 'single' | 'small' | 'large';
+
+export interface RecommendationQuery {
+  purpose: RecommendPurpose;
+  groupSize: GroupSize;
+  buildingId: string; // 'all' or specific
+  needComputers?: boolean;
+  needProjector?: boolean;
+}
+
+export interface RecommendationResult {
+  roomStatus: RoomStatusResult;
+  score: number;
+  matchReasons: string[];
+}

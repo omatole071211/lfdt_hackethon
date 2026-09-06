@@ -1,0 +1,15 @@
+{
+  "name": "campusspace-backend",
+  "version": "1.0.0",
+  "description": "Node.js Express backend REST API for CampusSpace / RoomRadar availability finder",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

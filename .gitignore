@@ -1,4 +1,24 @@
-# Logs
+# Dependencies
+node_modules/
+backend/node_modules/
+.pnpm-store/
+
+# Production Build Outputs
+dist/
+dist-ssr/
+build/
+out/
+backend/dist/
+
+# Environment Variables & Local Configs
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Logs & Debugging
 logs
 *.log
 npm-debug.log*
@@ -7,18 +27,29 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
+# Editor & OS Files
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+!.vscode/settings.json
+!.vscode/tasks.json
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Cache & Temporary Files
+.eslintcache
+.cache/
+.vite/
+*.tmp
+*.temp
+scratch/
