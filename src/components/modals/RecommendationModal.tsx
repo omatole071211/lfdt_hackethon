@@ -4,7 +4,6 @@ import {
   Building as BuildingIcon,
   CheckCircle2,
   Clock,
-  Group,
   Laptop,
   Lightbulb,
   Monitor,
@@ -47,7 +46,7 @@ export const RecommendationModal: React.FC<RecommendationModalProps> = ({
   onSelectRoom,
 }) => {
   const [query, setQuery] = useState<RecommendationQuery>({
-    purpose: 'study',
+    purpose: 'classroom',
     groupSize: 'small',
     buildingId: 'all',
     needComputers: false,
@@ -83,36 +82,29 @@ export const RecommendationModal: React.FC<RecommendationModalProps> = ({
           {/* Step 1: Purpose */}
           <div className="form-group">
             <label className="form-label">
-              <Lightbulb size={16} /> What do you need the room for?
+              <Lightbulb size={16} /> What room type do you need?
             </label>
             <div className="choice-grid">
               <button
-                className={`choice-card ${query.purpose === 'study' ? 'selected' : ''}`}
-                onClick={() => setQuery({ ...query, purpose: 'study' })}
+                className={`choice-card ${query.purpose === 'classroom' ? 'selected' : ''}`}
+                onClick={() => setQuery({ ...query, purpose: 'classroom' })}
               >
                 <User size={20} />
-                <span>Quiet Self Study</span>
-              </button>
-              <button
-                className={`choice-card ${query.purpose === 'group' ? 'selected' : ''}`}
-                onClick={() => setQuery({ ...query, purpose: 'group' })}
-              >
-                <Group size={20} />
-                <span>Group Discussion</span>
+                <span>Classroom</span>
               </button>
               <button
                 className={`choice-card ${query.purpose === 'lab' ? 'selected' : ''}`}
                 onClick={() => setQuery({ ...query, purpose: 'lab', needComputers: true })}
               >
                 <Laptop size={20} />
-                <span>Lab / Coding Session</span>
+                <span>Computer Lab</span>
               </button>
               <button
-                className={`choice-card ${query.purpose === 'lecture' ? 'selected' : ''}`}
-                onClick={() => setQuery({ ...query, purpose: 'lecture', needProjector: true })}
+                className={`choice-card ${query.purpose === 'seminar_hall' ? 'selected' : ''}`}
+                onClick={() => setQuery({ ...query, purpose: 'seminar_hall', needProjector: true })}
               >
                 <Users size={20} />
-                <span>Presentation / Talk</span>
+                <span>Seminar / Presentation Hall</span>
               </button>
             </div>
           </div>
@@ -128,9 +120,8 @@ export const RecommendationModal: React.FC<RecommendationModalProps> = ({
                 value={query.groupSize}
                 onChange={(e) => setQuery({ ...query, groupSize: e.target.value as GroupSize })}
               >
-                <option value="single">Single Person (1 Seat)</option>
                 <option value="small">Small Group (2–5 People)</option>
-                <option value="large">Large Group (10+ People)</option>
+                <option value="large">Large Group (More than 10 People)</option>
               </select>
             </div>
 
@@ -155,17 +146,8 @@ export const RecommendationModal: React.FC<RecommendationModalProps> = ({
 
           {/* Step 3: Equipment Toggles */}
           <div className="form-group">
-            <label className="form-label">Equipment Requirements</label>
+            <label className="form-label">Equipment Needed</label>
             <div className="toggles-row">
-              <label className="checkbox-pill">
-                <input
-                  type="checkbox"
-                  checked={!!query.needComputers}
-                  onChange={(e) => setQuery({ ...query, needComputers: e.target.checked })}
-                />
-                <Monitor size={16} />
-                <span>Desktop PCs Needed</span>
-              </label>
               <label className="checkbox-pill">
                 <input
                   type="checkbox"
@@ -173,7 +155,16 @@ export const RecommendationModal: React.FC<RecommendationModalProps> = ({
                   onChange={(e) => setQuery({ ...query, needProjector: e.target.checked })}
                 />
                 <Projector size={16} />
-                <span>HD Projector Needed</span>
+                <span>HD Projector</span>
+              </label>
+              <label className="checkbox-pill">
+                <input
+                  type="checkbox"
+                  checked={!!query.needComputers}
+                  onChange={(e) => setQuery({ ...query, needComputers: e.target.checked })}
+                />
+                <Monitor size={16} />
+                <span>Desktop PCs</span>
               </label>
             </div>
           </div>

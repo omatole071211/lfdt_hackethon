@@ -4,7 +4,6 @@ import {
   Calendar,
   Clock,
   Layers,
-  FlaskConical,
   GraduationCap,
   Monitor,
   Radio,
@@ -178,12 +177,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             onClick={() => onSelectType('computer_lab')}
           >
             <Monitor size={15} /> Computer Labs
-          </button>
-          <button
-            className={`pill-btn ${filters.selectedType === 'science_lab' ? 'active' : ''}`}
-            onClick={() => onSelectType('science_lab')}
-          >
-            <FlaskConical size={15} /> Science / Eng Labs
           </button>
           <button
             className={`pill-btn ${filters.selectedType === 'seminar_hall' ? 'active' : ''}`}

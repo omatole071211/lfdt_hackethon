@@ -92,37 +92,35 @@ export function recommendRooms(
 
     // Purpose match score
     if (query.purpose === 'lab') {
-      if (res.room.type === 'computer_lab' || res.room.type === 'science_lab') {
+      if (res.room.type === 'computer_lab') {
         score += 80;
-        matchReasons.push('Equipped lab facility for practical work');
+        matchReasons.push('Computer Lab facility for practical work');
       } else {
         score -= 40;
       }
-    } else if (query.purpose === 'study') {
+    } else if (query.purpose === 'classroom') {
       if (res.room.type === 'classroom') {
-        score += 50;
-        matchReasons.push('Ideal quiet study environment');
+        score += 60;
+        matchReasons.push('Classroom suitable for study & sessions');
       }
-    } else if (query.purpose === 'group') {
-      if (res.room.amenities.seatingCapacity >= 30) {
-        score += 50;
-        matchReasons.push(`Spacious seating (${res.room.amenities.seatingCapacity} seats) for collaboration`);
-      }
-    } else if (query.purpose === 'lecture') {
+    } else if (query.purpose === 'seminar_hall') {
       if (res.room.type === 'seminar_hall' || res.room.amenities.seatingCapacity >= 80) {
         score += 70;
-        matchReasons.push('High-capacity hall suitable for presentations');
+        matchReasons.push('Seminar Hall / high capacity venue');
       }
     }
 
-    // Seating capacity preference
-    if (query.groupSize === 'single' && res.room.amenities.seatingCapacity <= 60) {
-      score += 20;
-    } else if (query.groupSize === 'small' && res.room.amenities.seatingCapacity >= 30) {
-      score += 20;
-    } else if (query.groupSize === 'large' && res.room.amenities.seatingCapacity >= 80) {
-      score += 40;
-      matchReasons.push('Large capacity seating');
+    // Seating capacity preference based on group size (2-5 vs >10)
+    if (query.groupSize === 'small') {
+      if (res.room.amenities.seatingCapacity >= 2 && res.room.amenities.seatingCapacity <= 60) {
+        score += 30;
+        matchReasons.push('Optimal capacity for 2–5 people');
+      }
+    } else if (query.groupSize === 'large') {
+      if (res.room.amenities.seatingCapacity >= 60) {
+        score += 40;
+        matchReasons.push(`Large capacity (${res.room.amenities.seatingCapacity}+ seats) for 10+ group`);
+      }
     }
 
     // Equipment preferences

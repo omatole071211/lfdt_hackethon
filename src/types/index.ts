@@ -61,8 +61,8 @@ export interface FilterState {
   searchQuery: string;
 }
 
-export type RecommendPurpose = 'study' | 'group' | 'lab' | 'lecture';
-export type GroupSize = 'single' | 'small' | 'large';
+export type RecommendPurpose = 'classroom' | 'lab' | 'seminar_hall' | 'science_lab';
+export type GroupSize = 'small' | 'large';
 
 export interface RecommendationQuery {
   purpose: RecommendPurpose;
