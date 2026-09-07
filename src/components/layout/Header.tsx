@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Clock, Moon, Sun } from 'lucide-react';
+import { Clock, Moon, Sun } from 'lucide-react';
 import type { LiveTimeState } from '../../hooks/useLiveTime';
 import { formatTime12h } from '../../utils/timeHelpers';
 
@@ -23,12 +23,12 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="header-container">
         {/* Brand Logo & Title */}
         <div className="brand-box">
-          <div className="brand-icon">
-            <Building2 className="icon-pulse" size={28} />
+          <div className="brand-logo-wrap">
+            <img className="brand-logo" src="/pccoe-logo.png" alt="PCCOE logo" />
           </div>
           <div>
             <div className="brand-title">
-              CampusSpace <span className="brand-badge">RoomRadar</span>
+              <strong>CampusSpace</strong> <span className="brand-badge">RoomRadar</span>
             </div>
             <p className="brand-sub">Real-Time Classroom & Lab Availability Finder</p>
           </div>

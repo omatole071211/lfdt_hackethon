@@ -6,15 +6,15 @@
   --bg-surface: #ffffff;
   --bg-surface-hover: #f1f5f9;
   --border-color: #e2e8f0;
-  --border-focus: #6366f1;
+  --border-focus: #0a8fb5;
 
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
 
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
-  --primary-light: #eef2ff;
+  --primary: #087ea4;
+  --primary-hover: #056681;
+  --primary-light: #dff6fb;
 
   --accent-green: #10b981;
   --accent-green-bg: #ecfdf5;
@@ -24,11 +24,11 @@
   --accent-red-bg: #fff1f2;
   --accent-red-border: #fecdd3;
 
-  --accent-indigo: #6366f1;
-  --accent-indigo-bg: #e0e7ff;
+  --accent-indigo: #087ea4;
+  --accent-indigo-bg: #dff6fb;
 
-  --accent-amber: #f59e0b;
-  --accent-amber-bg: #fef3c7;
+  --accent-amber: #d79b12;
+  --accent-amber-bg: #fff7d6;
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
@@ -43,15 +43,15 @@
   --bg-surface: #131b2e;
   --bg-surface-hover: #1e293b;
   --border-color: #1e293b;
-  --border-focus: #818cf8;
+  --border-focus: #42d4ef;
 
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
 
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --primary-light: #1e1b4b;
+  --primary: #42d4ef;
+  --primary-hover: #22b8d6;
+  --primary-light: rgba(66, 212, 239, 0.16);
 
   --accent-green: #34d399;
   --accent-green-bg: rgba(16, 185, 129, 0.12);
@@ -61,11 +61,11 @@
   --accent-red-bg: rgba(244, 63, 94, 0.12);
   --accent-red-border: rgba(244, 63, 94, 0.3);
 
-  --accent-indigo: #818cf8;
-  --accent-indigo-bg: rgba(99, 102, 241, 0.15);
+  --accent-indigo: #42d4ef;
+  --accent-indigo-bg: rgba(66, 212, 239, 0.15);
 
-  --accent-amber: #fbbf24;
-  --accent-amber-bg: rgba(245, 158, 11, 0.15);
+  --accent-amber: #f4c84e;
+  --accent-amber-bg: rgba(244, 200, 78, 0.15);
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -129,16 +129,24 @@ body {
   gap: 12px;
 }
 
-.brand-icon {
+.brand-logo-wrap {
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, var(--primary), #818cf8);
-  color: #ffffff;
-  border-radius: var(--radius-md);
+  border-radius: 50%;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(5, 102, 129, 0.24);
+  border: 2px solid rgba(8, 126, 164, 0.25);
+  flex: 0 0 auto;
+}
+
+.brand-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .brand-title {
@@ -245,14 +253,14 @@ body {
 }
 
 .btn-wizard {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #087ea4, #19b9d7);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 12px rgba(8, 126, 164, 0.3);
 }
 
 .btn-wizard:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 6px 16px rgba(8, 126, 164, 0.4);
 }
 
 .btn-theme {
@@ -1020,7 +1028,7 @@ body {
 }
 
 .text-magic {
-  color: #8b5cf6;
+  color: var(--primary);
 }
 
 .btn-close {
@@ -1381,7 +1389,7 @@ body {
 }
 
 .btn-wizard-submit {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #087ea4, #19b9d7);
   color: #ffffff;
   padding: 12px;
   justify-content: center;
@@ -1442,8 +1450,8 @@ body {
 .score-tag {
   font-size: 0.72rem;
   font-weight: 800;
-  color: #8b5cf6;
-  background: #f3e8ff;
+  color: var(--primary);
+  background: var(--primary-light);
   padding: 2px 8px;
   border-radius: 6px;
   margin-left: 8px;
@@ -1549,7 +1557,7 @@ body {
   border-radius: var(--radius-sm);
   background-color: var(--bg-surface);
   border: 1px solid var(--border-color);
-  color: var(--text-main);
+  color: var(--text-primary);
 }
 
 /* Grid Summary Counter */
@@ -1569,7 +1577,7 @@ body {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-color);
   font-size: 0.82rem;
-  color: var(--text-main);
+  color: var(--text-primary);
 }
 
 .counter-chip.highlight {
@@ -1601,7 +1609,7 @@ body {
   font-size: 0.88rem;
   font-weight: 700;
   margin-bottom: 10px;
-  color: var(--text-main);
+  color: var(--text-primary);
 }
 
 .occupied-chips-grid {
@@ -1629,7 +1637,7 @@ body {
 
 .chip-subject {
   font-weight: 600;
-  color: var(--text-main);
+  color: var(--text-primary);
 }
 
 .chip-room {
