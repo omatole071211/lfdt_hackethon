@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { MOCK_BUILDINGS, MOCK_ROOMS, MOCK_SCHEDULES } from '../data/mockData';
-import type { DayOfWeek, FilterState, Room, RoomType } from '../types';
+import type { DayOfWeek, FilterState, OccupiedReservation, Room, RoomStatusResult, RoomType } from '../types';
 import { evaluateRoomStatus } from '../utils/timetableEngine';
 import { useLiveTime } from './useLiveTime';
 
@@ -19,21 +19,40 @@ export function useTimetableEngine() {
     sortBy: 'classroom',
   });
 
+  // User / Faculty dynamic room reservations (persisted in localStorage)
+  const [userReservations, setUserReservations] = useState<OccupiedReservation[]>(() => {
+    try {
+      const saved = localStorage.getItem('campusspace_reservations');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('campusspace_reservations', JSON.stringify(userReservations));
+    } catch (e) {
+      console.error('Failed to save reservations to localStorage', e);
+    }
+  }, [userReservations]);
+
   // Modal & Drawer Selection States
   const [detailRoom, setDetailRoom] = useState<Room | null>(null);
   const [weeklyRoom, setWeeklyRoom] = useState<Room | null>(null);
+  const [occupyTarget, setOccupyTarget] = useState<RoomStatusResult | null>(null);
   const [isRecommendOpen, setIsRecommendOpen] = useState(false);
 
   // Active evaluation time and day (Live clock vs user custom pick)
   const activeDay: DayOfWeek = filters.isLiveMode ? liveTime.dayOfWeek : filters.selectedDay;
   const activeTime: string = filters.isLiveMode ? liveTime.time24h : filters.selectedTime;
 
-  // Calculate status for all rooms based on active day & time
+  // Calculate status for all rooms based on active day & time & reservations
   const allRoomStatuses = useMemo(() => {
     return MOCK_ROOMS.map((room) =>
-      evaluateRoomStatus(room, MOCK_SCHEDULES, activeDay, activeTime)
+      evaluateRoomStatus(room, MOCK_SCHEDULES, activeDay, activeTime, userReservations)
     );
-  }, [activeDay, activeTime]);
+  }, [activeDay, activeTime, userReservations]);
 
   // Apply visual filters (Building, Multi-Floor, Room Type, Search Query, Sorting)
   const filteredStatuses = useMemo(() => {
@@ -174,8 +193,18 @@ export function useTimetableEngine() {
     setFilters((prev) => ({ ...prev, searchQuery: query }));
   };
 
+<<<<<<< HEAD
   const setSortBy = (sortBy: 'classroom' | 'class') => {
     setFilters((prev) => ({ ...prev, sortBy }));
+=======
+  const addReservation = (reservation: OccupiedReservation) => {
+    setUserReservations((prev) => [...prev, reservation]);
+    setOccupyTarget(null);
+  };
+
+  const removeReservation = (reservationId: string) => {
+    setUserReservations((prev) => prev.filter((r) => r.id !== reservationId));
+>>>>>>> ed788a8 (Changes are done)
   };
 
   return {
@@ -194,7 +223,16 @@ export function useTimetableEngine() {
     toggleFloorSelection,
     setSelectedType,
     setSearchQuery,
+<<<<<<< HEAD
     setSortBy,
+=======
+    // Dynamic Occupy System
+    userReservations,
+    addReservation,
+    removeReservation,
+    occupyTarget,
+    setOccupyTarget,
+>>>>>>> ed788a8 (Changes are done)
     // Modals & Drawers
     detailRoom,
     setDetailRoom,

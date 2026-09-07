@@ -42,6 +42,19 @@ export interface ScheduleSlot {
   batch: string;
 }
 
+export interface OccupiedReservation {
+  id: string;
+  roomId: string;
+  dayOfWeek: DayOfWeek;
+  startTime: string; // "10:00"
+  endTime: string;   // "11:00"
+  facultyName: string;
+  subjectName: string;
+  batch: string;
+  purpose?: string;
+  createdAt: string;
+}
+
 export interface RoomStatusResult {
   room: Room;
   isAvailable: boolean;
@@ -50,6 +63,8 @@ export interface RoomStatusResult {
   freeUntil?: string;
   nextAvailableTime?: string;
   availableDurationMins?: number;
+  isFacultyOccupied?: boolean;
+  activeReservation?: OccupiedReservation;
 }
 
 export interface FilterState {

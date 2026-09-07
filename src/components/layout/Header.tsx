@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Clock, Moon, Sparkles, Sun } from 'lucide-react';
+import { Building2, Clock, Moon, Sun } from 'lucide-react';
 import type { LiveTimeState } from '../../hooks/useLiveTime';
 import { formatTime12h } from '../../utils/timeHelpers';
 
@@ -7,7 +7,6 @@ interface HeaderProps {
   liveTime: LiveTimeState;
   isDarkMode: boolean;
   onToggleTheme: () => void;
-  onOpenRecommend: () => void;
   isLiveMode: boolean;
   onResetLive: () => void;
 }
@@ -16,7 +15,6 @@ export const Header: React.FC<HeaderProps> = ({
   liveTime,
   isDarkMode,
   onToggleTheme,
-  onOpenRecommend,
   isLiveMode,
   onResetLive,
 }) => {
@@ -55,12 +53,6 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="custom-indicator">CUSTOM</span>
             )}
           </div>
-
-          {/* Smart Free Room Wizard Button */}
-          <button className="btn btn-wizard" onClick={onOpenRecommend}>
-            <Sparkles size={18} />
-            <span>Find Free Room</span>
-          </button>
 
           {/* Theme Switcher */}
           <button

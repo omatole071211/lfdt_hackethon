@@ -6,6 +6,7 @@ import { RoomGrid } from './components/rooms/RoomGrid';
 import { RoomDetailDrawer } from './components/modals/RoomDetailDrawer';
 import { WeeklyTimetableModal } from './components/modals/WeeklyTimetableModal';
 import { RecommendationModal } from './components/modals/RecommendationModal';
+import { OccupyRoomModal } from './components/modals/OccupyRoomModal';
 import { useTimetableEngine } from './hooks/useTimetableEngine';
 import type { RoomStatusResult } from './types';
 import './index.css';
@@ -43,7 +44,15 @@ export function App() {
     toggleFloorSelection,
     setSelectedType,
     setSearchQuery,
+<<<<<<< HEAD
     setSortBy,
+=======
+    // Dynamic Occupy System
+    addReservation,
+    removeReservation,
+    occupyTarget,
+    setOccupyTarget,
+>>>>>>> ed788a8 (Changes are done)
     // Drawer & Modals
     detailRoom,
     setDetailRoom,
@@ -69,7 +78,6 @@ export function App() {
         liveTime={liveTime}
         isDarkMode={isDarkMode}
         onToggleTheme={toggleTheme}
-        onOpenRecommend={() => setIsRecommendOpen(true)}
         isLiveMode={filters.isLiveMode}
         onResetLive={() => toggleLiveMode(true)}
       />
@@ -98,8 +106,21 @@ export function App() {
           statuses={filteredStatuses}
           onOpenDetail={(res) => setDetailRoom(res.room)}
           onOpenWeekly={(res) => setWeeklyRoom(res.room)}
+          onOccupyRoom={(res) => setOccupyTarget(res)}
+          onVacateRoom={(res) => removeReservation(res.id)}
         />
       </main>
+
+      {/* Faculty Occupy Room Modal */}
+      {occupyTarget && (
+        <OccupyRoomModal
+          statusResult={occupyTarget}
+          activeDay={activeDay}
+          activeTime={activeTime}
+          onClose={() => setOccupyTarget(null)}
+          onOccupy={(res) => addReservation(res)}
+        />
+      )}
 
       {/* Slide-out Room Detail Drawer */}
       {detailRoom && (
@@ -111,6 +132,14 @@ export function App() {
           onOpenWeekly={(res) => {
             setDetailRoom(null);
             setWeeklyRoom(res.room);
+          }}
+          onOccupyRoom={(res) => {
+            setDetailRoom(null);
+            setOccupyTarget(res);
+          }}
+          onVacateRoom={(res) => {
+            removeReservation(res.id);
+            setDetailRoom(null);
           }}
         />
       )}
