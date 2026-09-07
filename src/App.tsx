@@ -44,15 +44,12 @@ export function App() {
     toggleFloorSelection,
     setSelectedType,
     setSearchQuery,
-<<<<<<< HEAD
     setSortBy,
-=======
     // Dynamic Occupy System
     addReservation,
     removeReservation,
     occupyTarget,
     setOccupyTarget,
->>>>>>> ed788a8 (Changes are done)
     // Drawer & Modals
     detailRoom,
     setDetailRoom,
@@ -172,7 +169,7 @@ export function App() {
       {/* App Footer */}
       <footer className="app-footer">
         <p>
-          🏫 <strong>CampusSpace / RoomRadar</strong> — Powered by Academic Timetable Query Engine
+          <strong>CampusSpace</strong> — Real-time campus space finder
         </p>
       </footer>
     </div>

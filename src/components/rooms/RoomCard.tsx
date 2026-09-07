@@ -67,7 +67,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({
       {/* Top Banner Status */}
       <div className="card-header">
         <div className="status-indicator">
-          {status.isHoliday ? (
+          {statusResult.isHoliday ? (
             <>
               <Calendar size={18} className="icon-amber" />
               <span className="status-text text-amber">HOLIDAY (CLOSED)</span>
@@ -127,7 +127,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({
         </div>
 
         {/* Dynamic Class Status Information Box */}
-        {status.isHoliday ? (
+        {statusResult.isHoliday ? (
           <div className="status-box box-holiday">
             <div className="status-box-header">
               <Calendar size={16} className="text-amber" />

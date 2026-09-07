@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
 import { BookOpen, CheckCircle2, GraduationCap, Monitor, SearchX, SlidersHorizontal, XCircle } from 'lucide-react';
-import type { RoomStatusResult } from '../../types';
-=======
-import { CheckCircle2, SearchX, SlidersHorizontal, XCircle } from 'lucide-react';
 import type { OccupiedReservation, RoomStatusResult } from '../../types';
->>>>>>> ed788a8 (Changes are done)
 import { RoomCard } from './RoomCard';
 import { formatTime12h } from '../../utils/timeHelpers';
 
@@ -132,4 +127,3 @@ export const RoomGrid: React.FC<RoomGridProps> = ({
     </section>
   );
 };
-

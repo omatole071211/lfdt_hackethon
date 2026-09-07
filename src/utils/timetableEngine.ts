@@ -110,19 +110,7 @@ export function evaluateRoomStatus(
     freeUntil = upcomingReservation.startTime;
   }
 
-<<<<<<< HEAD
-  // 6th Building (Computer): 5:10 PM (17:10)
-  // 9th Building (Mechanical): 6:10 PM (18:10)
-  // 5th Building (IT & Comp): 6:10 PM (18:10)
-  const buildingClosingTime =
-    room.buildingId === 'bld-6' || room.code.startsWith('6')
-      ? '17:10'
-      : '18:10';
-
-  const freeUntil = upcomingSlot ? upcomingSlot.startTime : buildingClosingTime;
-=======
->>>>>>> bf2c0ba0a181e9c965b2bb3dbdaddb2b6794e508
-  const freeUntilMins = timeToMinutes(freeUntil);
+	  const freeUntilMins = timeToMinutes(freeUntil);
   const availableDurationMins = Math.max(0, freeUntilMins - targetMins);
 
   return {

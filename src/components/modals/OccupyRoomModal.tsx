@@ -63,7 +63,7 @@ export const OccupyRoomModal: React.FC<OccupyRoomModalProps> = ({
     const finalBatch = batch.trim() || 'General Batch';
 
     const newReservation: OccupiedReservation = {
-      id: `res-${Date.now()}`,
+      id: `res-${crypto.randomUUID()}`,
       roomId: room.id,
       dayOfWeek: activeDay,
       startTime: activeTime,

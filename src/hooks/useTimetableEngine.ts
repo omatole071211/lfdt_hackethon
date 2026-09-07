@@ -217,19 +217,18 @@ export function useTimetableEngine() {
     setFilters((prev) => ({ ...prev, searchQuery: query }));
   };
 
-<<<<<<< HEAD
-  const setSortBy = (sortBy: 'classroom' | 'class') => {
-    setFilters((prev) => ({ ...prev, sortBy }));
-=======
-  const addReservation = (reservation: OccupiedReservation) => {
-    setUserReservations((prev) => [...prev, reservation]);
-    setOccupyTarget(null);
-  };
+	const setSortBy = (sortBy: 'classroom' | 'class') => {
+	  setFilters((prev) => ({ ...prev, sortBy }));
+	};
 
-  const removeReservation = (reservationId: string) => {
-    setUserReservations((prev) => prev.filter((r) => r.id !== reservationId));
->>>>>>> ed788a8 (Changes are done)
-  };
+	const addReservation = (reservation: OccupiedReservation) => {
+	  setUserReservations((prev) => [...prev, reservation]);
+	  setOccupyTarget(null);
+	};
+
+	const removeReservation = (reservationId: string) => {
+	  setUserReservations((prev) => prev.filter((r) => r.id !== reservationId));
+	};
 
   return {
     buildings: MOCK_BUILDINGS,
@@ -245,18 +244,15 @@ export function useTimetableEngine() {
     setSelectedTime,
     setSelectedBuilding,
     toggleFloorSelection,
-    setSelectedType,
-    setSearchQuery,
-<<<<<<< HEAD
-    setSortBy,
-=======
-    // Dynamic Occupy System
-    userReservations,
-    addReservation,
-    removeReservation,
-    occupyTarget,
-    setOccupyTarget,
->>>>>>> ed788a8 (Changes are done)
+	    setSelectedType,
+	    setSearchQuery,
+	    setSortBy,
+	    // Dynamic Occupy System
+	    userReservations,
+	    addReservation,
+	    removeReservation,
+	    occupyTarget,
+	    setOccupyTarget,
     // Modals & Drawers
     detailRoom,
     setDetailRoom,
