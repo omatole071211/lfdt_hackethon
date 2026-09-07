@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BookOpen, CheckCircle2, GraduationCap, Monitor, SearchX, SlidersHorizontal, XCircle } from 'lucide-react';
 import type { OccupiedReservation, RoomStatusResult } from '../../types';
 import { RoomCard } from './RoomCard';
-import { formatTime12h } from '../../utils/timeHelpers';
 
 interface RoomGridProps {
   statuses: RoomStatusResult[];
@@ -82,26 +81,6 @@ export const RoomGrid: React.FC<RoomGridProps> = ({
           </button>
         </div>
       </div>
-
-      {/* Occupied Classes Summary Banner */}
-      {occupiedCount > 0 && (
-        <div className="occupied-classes-summary">
-          <div className="summary-title">
-            <XCircle size={16} className="text-red" />
-            <span>Currently Occupied Classes ({occupiedCount}):</span>
-          </div>
-          <div className="occupied-chips-grid">
-            {occupiedStatuses.map(({ room, currentSchedule }) => (
-              <div key={room.id} className="occupied-class-chip">
-                <span className="chip-code">{currentSchedule?.subjectCode}</span>
-                <span className="chip-subject">{currentSchedule?.subjectName}</span>
-                <span className="chip-room">• {room.name} ({room.departmentName || `Floor ${room.floor}`})</span>
-                <span className="chip-time">⏰ {formatTime12h(currentSchedule?.startTime || '')} – {formatTime12h(currentSchedule?.endTime || '')}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Main Grid */}
       {displayedStatuses.length > 0 ? (
