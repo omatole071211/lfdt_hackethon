@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { BookOpen, CheckCircle2, GraduationCap, Monitor, SearchX, SlidersHorizontal, XCircle } from 'lucide-react';
 import type { RoomStatusResult } from '../../types';
+=======
+import { CheckCircle2, SearchX, SlidersHorizontal, XCircle } from 'lucide-react';
+import type { OccupiedReservation, RoomStatusResult } from '../../types';
+>>>>>>> ed788a8 (Changes are done)
 import { RoomCard } from './RoomCard';
 import { formatTime12h } from '../../utils/timeHelpers';
 
@@ -8,6 +13,8 @@ interface RoomGridProps {
   statuses: RoomStatusResult[];
   onOpenDetail: (roomStatus: RoomStatusResult) => void;
   onOpenWeekly: (roomStatus: RoomStatusResult) => void;
+  onOccupyRoom?: (roomStatus: RoomStatusResult) => void;
+  onVacateRoom?: (reservation: OccupiedReservation) => void;
 }
 
 type TabView = 'all' | 'available' | 'occupied';
@@ -16,6 +23,8 @@ export const RoomGrid: React.FC<RoomGridProps> = ({
   statuses,
   onOpenDetail,
   onOpenWeekly,
+  onOccupyRoom,
+  onVacateRoom,
 }) => {
   const [activeTab, setActiveTab] = useState<TabView>('all');
 
@@ -108,6 +117,8 @@ export const RoomGrid: React.FC<RoomGridProps> = ({
               statusResult={statusResult}
               onOpenDetail={onOpenDetail}
               onOpenWeekly={onOpenWeekly}
+              onOccupyRoom={onOccupyRoom}
+              onVacateRoom={onVacateRoom}
             />
           ))}
         </div>

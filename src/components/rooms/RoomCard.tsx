@@ -11,19 +11,23 @@ import {
   XCircle,
   Zap,
 } from 'lucide-react';
-import type { RoomStatusResult, RoomType } from '../../types';
+import type { OccupiedReservation, RoomStatusResult, RoomType } from '../../types';
 import { formatDuration, formatTime12h } from '../../utils/timeHelpers';
 
 interface RoomCardProps {
   statusResult: RoomStatusResult;
   onOpenDetail: (roomStatus: RoomStatusResult) => void;
   onOpenWeekly: (roomStatus: RoomStatusResult) => void;
+  onOccupyRoom?: (roomStatus: RoomStatusResult) => void;
+  onVacateRoom?: (reservation: OccupiedReservation) => void;
 }
 
 export const RoomCard: React.FC<RoomCardProps> = ({
   statusResult,
   onOpenDetail,
   onOpenWeekly,
+  onOccupyRoom,
+  onVacateRoom,
 }) => {
   const { room, isAvailable, currentSchedule, nextSchedule, freeUntil, availableDurationMins } =
     statusResult;
@@ -59,7 +63,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({
   };
 
   return (
-    <div className={`room-card ${isAvailable ? 'card-available' : 'card-occupied'}`}>
+    <div className={`room-card ${isAvailable ? 'card-available' : 'card-occupied'} ${statusResult.isFacultyOccupied ? 'card-faculty-occupied' : ''}`}>
       {/* Top Banner Status */}
       <div className="card-header">
         <div className="status-indicator">
@@ -72,6 +76,11 @@ export const RoomCard: React.FC<RoomCardProps> = ({
             <>
               <CheckCircle2 size={18} className="icon-green" />
               <span className="status-text text-green">AVAILABLE NOW</span>
+            </>
+          ) : statusResult.isFacultyOccupied ? (
+            <>
+              <XCircle size={18} className="icon-amber" />
+              <span className="status-text text-amber">FACULTY RESERVED</span>
             </>
           ) : (
             <>
@@ -151,10 +160,12 @@ export const RoomCard: React.FC<RoomCardProps> = ({
             )}
           </div>
         ) : (
-          <div className="status-box box-busy">
+          <div className={`status-box ${statusResult.isFacultyOccupied ? 'box-amber' : 'box-busy'}`}>
             <div className="status-box-header">
-              <Clock size={16} className="text-red" />
-              <span className="box-title">Current Scheduled Session</span>
+              <Clock size={16} className={statusResult.isFacultyOccupied ? 'text-amber' : 'text-red'} />
+              <span className="box-title">
+                {statusResult.isFacultyOccupied ? 'Faculty Ad-hoc Reservation' : 'Current Scheduled Session'}
+              </span>
             </div>
 
             {currentSchedule && (
@@ -183,13 +194,23 @@ export const RoomCard: React.FC<RoomCardProps> = ({
 
       {/* Card Actions */}
       <div className="card-footer">
+        {isAvailable && onOccupyRoom && (
+          <button className="btn-card-action occupy" onClick={() => onOccupyRoom(statusResult)}>
+            🔒 Occupy Room
+          </button>
+        )}
+        {statusResult.isFacultyOccupied && statusResult.activeReservation && onVacateRoom && (
+          <button className="btn-card-action vacate" onClick={() => onVacateRoom(statusResult.activeReservation!)}>
+            🔓 Vacate Room
+          </button>
+        )}
         <button className="btn-card-action" onClick={() => onOpenWeekly(statusResult)}>
           <Calendar size={15} />
-          <span>Weekly Schedule</span>
+          <span>Weekly</span>
         </button>
         <button className="btn-card-action primary" onClick={() => onOpenDetail(statusResult)}>
           <Info size={15} />
-          <span>Room Specs</span>
+          <span>Specs</span>
         </button>
       </div>
     </div>

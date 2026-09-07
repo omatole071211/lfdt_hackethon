@@ -1,5 +1,6 @@
 import type {
   DayOfWeek,
+  OccupiedReservation,
   RecommendationQuery,
   RecommendationResult,
   Room,
@@ -18,7 +19,8 @@ export function evaluateRoomStatus(
   room: Room,
   schedules: ScheduleSlot[],
   day: DayOfWeek,
-  targetTime: string
+  targetTime: string,
+  userReservations: OccupiedReservation[] = []
 ): RoomStatusResult {
   // Saturday & Sunday are Weekend Holidays (Closed)
   if (day === 'Saturday' || day === 'Sunday') {
@@ -33,12 +35,43 @@ export function evaluateRoomStatus(
 
   const targetMins = timeToMinutes(targetTime);
 
-  // Filter & sort all slots for this room on the selected day
+  // 1. Check for active faculty/user ad-hoc reservation
+  const activeReservation = userReservations.find((r) => {
+    if (r.roomId !== room.id || r.dayOfWeek !== day) return false;
+    const startMins = timeToMinutes(r.startTime);
+    const endMins = timeToMinutes(r.endTime);
+    return targetMins >= startMins && targetMins < endMins;
+  });
+
+  if (activeReservation) {
+    const reservationScheduleSlot: ScheduleSlot = {
+      id: activeReservation.id,
+      roomId: room.id,
+      dayOfWeek: day,
+      startTime: activeReservation.startTime,
+      endTime: activeReservation.endTime,
+      subjectCode: 'FACULTY-RESERVED',
+      subjectName: activeReservation.subjectName,
+      facultyName: activeReservation.facultyName,
+      batch: activeReservation.batch,
+    };
+
+    return {
+      room,
+      isAvailable: false,
+      isFacultyOccupied: true,
+      activeReservation,
+      currentSchedule: reservationScheduleSlot,
+      nextAvailableTime: activeReservation.endTime,
+    };
+  }
+
+  // Filter & sort all master timetable slots for this room on the selected day
   const roomSlots = schedules
     .filter((s) => s.roomId === room.id && s.dayOfWeek === day)
     .sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
 
-  // 1. Check for active ongoing schedule slot
+  // 2. Check for active ongoing master schedule slot
   const activeSlot = roomSlots.find((s) => {
     const startMins = timeToMinutes(s.startTime);
     const endMins = timeToMinutes(s.endTime);
@@ -46,7 +79,7 @@ export function evaluateRoomStatus(
   });
 
   if (activeSlot) {
-    // Room is OCCUPIED
+    // Room is OCCUPIED by master schedule
     const nextSlotAfterCurrent = roomSlots.find(
       (s) => timeToMinutes(s.startTime) >= timeToMinutes(activeSlot.endTime)
     );
@@ -60,9 +93,24 @@ export function evaluateRoomStatus(
     };
   }
 
-  // 2. Room is AVAILABLE — Find next upcoming schedule slot today
+  // 3. Room is AVAILABLE — Find next upcoming master schedule slot or upcoming reservation today
   const upcomingSlot = roomSlots.find((s) => timeToMinutes(s.startTime) > targetMins);
+  const upcomingReservation = userReservations.find(
+    (r) => r.roomId === room.id && r.dayOfWeek === day && timeToMinutes(r.startTime) > targetMins
+  );
 
+  let freeUntil = ACADEMIC_DAY_END;
+  if (upcomingSlot && upcomingReservation) {
+    freeUntil = timeToMinutes(upcomingSlot.startTime) < timeToMinutes(upcomingReservation.startTime)
+      ? upcomingSlot.startTime
+      : upcomingReservation.startTime;
+  } else if (upcomingSlot) {
+    freeUntil = upcomingSlot.startTime;
+  } else if (upcomingReservation) {
+    freeUntil = upcomingReservation.startTime;
+  }
+
+<<<<<<< HEAD
   // 6th Building (Computer): 5:10 PM (17:10)
   // 9th Building (Mechanical): 6:10 PM (18:10)
   // 5th Building (IT & Comp): 6:10 PM (18:10)
@@ -72,6 +120,8 @@ export function evaluateRoomStatus(
       : '18:10';
 
   const freeUntil = upcomingSlot ? upcomingSlot.startTime : buildingClosingTime;
+=======
+>>>>>>> bf2c0ba0a181e9c965b2bb3dbdaddb2b6794e508
   const freeUntilMins = timeToMinutes(freeUntil);
   const availableDurationMins = Math.max(0, freeUntilMins - targetMins);
 

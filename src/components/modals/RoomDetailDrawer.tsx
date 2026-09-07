@@ -9,7 +9,7 @@ import {
   XCircle,
   Zap,
 } from 'lucide-react';
-import type { DayOfWeek, RoomStatusResult, ScheduleSlot } from '../../types';
+import type { DayOfWeek, OccupiedReservation, RoomStatusResult, ScheduleSlot } from '../../types';
 import { formatTime12h } from '../../utils/timeHelpers';
 
 interface RoomDetailDrawerProps {
@@ -18,6 +18,8 @@ interface RoomDetailDrawerProps {
   activeDay: DayOfWeek;
   onClose: () => void;
   onOpenWeekly: (statusResult: RoomStatusResult) => void;
+  onOccupyRoom?: (statusResult: RoomStatusResult) => void;
+  onVacateRoom?: (reservation: OccupiedReservation) => void;
 }
 
 export const RoomDetailDrawer: React.FC<RoomDetailDrawerProps> = ({
@@ -26,6 +28,8 @@ export const RoomDetailDrawer: React.FC<RoomDetailDrawerProps> = ({
   activeDay,
   onClose,
   onOpenWeekly,
+  onOccupyRoom,
+  onVacateRoom,
 }) => {
   if (!statusResult) return null;
 
@@ -54,29 +58,55 @@ export const RoomDetailDrawer: React.FC<RoomDetailDrawerProps> = ({
         </div>
 
         {/* Status Highlight Banner */}
-        <div className={`drawer-status-banner ${isAvailable ? 'banner-available' : 'banner-occupied'}`}>
+        <div className={`drawer-status-banner ${isAvailable ? 'banner-available' : statusResult.isFacultyOccupied ? 'banner-occupied' : 'banner-occupied'}`}>
           {isAvailable ? (
-            <>
-              <CheckCircle2 size={24} />
-              <div>
-                <h4>Currently Available</h4>
-                <p>
-                  Free until {formatTime12h(freeUntil || '17:30')} ({Math.floor((availableDurationMins || 0) / 60)}h{' '}
-                  {(availableDurationMins || 0) % 60}m free)
-                </p>
+            <div className="banner-flex-content">
+              <div className="banner-left">
+                <CheckCircle2 size={24} />
+                <div>
+                  <h4>Currently Available</h4>
+                  <p>
+                    Free until {formatTime12h(freeUntil || '17:30')} ({Math.floor((availableDurationMins || 0) / 60)}h{' '}
+                    {(availableDurationMins || 0) % 60}m free)
+                  </p>
+                </div>
               </div>
-            </>
+              {onOccupyRoom && (
+                <button
+                  className="btn btn-sm btn-occupy-banner"
+                  onClick={() => {
+                    onClose();
+                    onOccupyRoom(statusResult);
+                  }}
+                >
+                  🔒 Occupy Class Now
+                </button>
+              )}
+            </div>
           ) : (
-            <>
-              <XCircle size={24} />
-              <div>
-                <h4>Currently Occupied</h4>
-                <p>
-                  {currentSchedule?.subjectCode} - {currentSchedule?.subjectName} (until{' '}
-                  {formatTime12h(currentSchedule?.endTime || '')})
-                </p>
+            <div className="banner-flex-content">
+              <div className="banner-left">
+                <XCircle size={24} />
+                <div>
+                  <h4>{statusResult.isFacultyOccupied ? 'Faculty Ad-hoc Reservation' : 'Currently Occupied'}</h4>
+                  <p>
+                    {currentSchedule?.subjectCode} - {currentSchedule?.subjectName} (until{' '}
+                    {formatTime12h(currentSchedule?.endTime || '')})
+                  </p>
+                </div>
               </div>
-            </>
+              {statusResult.isFacultyOccupied && statusResult.activeReservation && onVacateRoom && (
+                <button
+                  className="btn btn-sm btn-vacate-banner"
+                  onClick={() => {
+                    onClose();
+                    onVacateRoom(statusResult.activeReservation!);
+                  }}
+                >
+                  🔓 Vacate Room
+                </button>
+              )}
+            </div>
           )}
         </div>
 
